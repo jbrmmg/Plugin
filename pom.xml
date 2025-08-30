@@ -6,7 +6,7 @@
   <groupId>com.jbr.plugin</groupId>
   <artifactId>version-setter-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
 
   <name>version-setter-maven-plugin</name>
 
