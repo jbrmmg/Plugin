@@ -4,11 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.jbr.plugin</groupId>
-  <artifactId>version-setter-maven-plugin</artifactId>
+  <artifactId>auto-version-release-prepare</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.6</version>
 
-  <name>version-setter-maven-plugin</name>
+  <name>Auto generates version numbers.</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,18 +26,13 @@
         <version>3.15.1</version>
         <configuration>
           <skipErrorNoDescriptorsFound>false</skipErrorNoDescriptorsFound>
+          <goalPrefix>auto-release</goalPrefix>
         </configuration>
         <executions>
           <execution>
             <id>default-descriptor</id>
             <goals>
               <goal>descriptor</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>help-goal</id>
-            <goals>
-              <goal>helpmojo</goal>
             </goals>
           </execution>
         </executions>
