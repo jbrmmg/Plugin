@@ -12,7 +12,7 @@ import org.apache.maven.plugin.BuildPluginManager;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
-@Mojo(name = "calc-release", defaultPhase = LifecyclePhase.INITIALIZE, threadSafe = true)
+@Mojo(name = "release", defaultPhase = LifecyclePhase.INITIALIZE, threadSafe = true)
 public class CalcRelease extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
