@@ -2,26 +2,25 @@ package com.jbr.plugin;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.Component;
+
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.BuildPluginManager;
+import javax.inject.Inject;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 @Mojo(name = "release", defaultPhase = LifecyclePhase.INITIALIZE, threadSafe = true)
 public class CalcRelease extends AbstractMojo {
-
-    @Parameter(defaultValue = "${project}", readonly = true, required = true)
+    @Inject
     private MavenProject project;
 
-    @Parameter(defaultValue = "${session}", readonly = true, required = true)
+    @Inject
     private MavenSession session;
 
-    @Component
+    @Inject
     private BuildPluginManager pluginManager;
 
     @Override
@@ -50,13 +49,14 @@ public class CalcRelease extends AbstractMojo {
                     plugin(
                             groupId("org.apache.maven.plugins"),
                             artifactId("maven-release-plugin"),
-                            version("3.0.0-M1") // use your release plugin version
+                            version("3.1.1")
                     ),
                     goal("prepare"),
                     configuration(
                             element(name("releaseVersion"), releaseVersion),
                             element(name("developmentVersion"), nextDevVersion),
-                            element(name("tag"), tag)
+                            element(name("tag"), tag),
+                            element(name("arguments"),"-DskipTests -DskipITs -Dmaven.test.skip=true")
                     ),
                     executionEnvironment(project, session, pluginManager)
             );
@@ -68,10 +68,12 @@ public class CalcRelease extends AbstractMojo {
                     plugin(
                             groupId("org.apache.maven.plugins"),
                             artifactId("maven-release-plugin"),
-                            version("3.0.0-M1")
+                            version("3.1.1")
                     ),
                     goal("perform"),
-                    configuration(),
+                    configuration(
+                            element(name("arguments"),"-DskipTests -DskipITs -Dmaven.test.skip=true")
+                    ),
                     executionEnvironment(project, session, pluginManager)
             );
 
