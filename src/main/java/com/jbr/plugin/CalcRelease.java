@@ -10,6 +10,8 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.BuildPluginManager;
 import javax.inject.Inject;
 
+import java.time.LocalDate;
+
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 @Mojo(name = "release", defaultPhase = LifecyclePhase.INITIALIZE, threadSafe = true)
@@ -30,11 +32,10 @@ public class CalcRelease extends AbstractMojo {
             throw new MojoExecutionException("Project version must end with -SNAPSHOT: " + currentVersion);
         }
 
-        // Compute release and next dev versions
-        String releaseVersion = currentVersion.replace("-SNAPSHOT", "");
-        String[] parts = releaseVersion.split("\\.");
-        int patch = Integer.parseInt(parts[2]);
-        String nextDevVersion = parts[0] + "." + parts[1] + "." + (patch + 1) + "-SNAPSHOT";
+        // Get current year and month
+        LocalDate now = LocalDate.now();
+        String releaseVersion = getString(now, currentVersion);
+        String nextDevVersion = releaseVersion + "-SNAPSHOT";
         String tag = "v" + releaseVersion;
 
         getLog().info("Preparing release:");
@@ -81,5 +82,28 @@ public class CalcRelease extends AbstractMojo {
         } catch (Exception e) {
             throw new MojoExecutionException("Failed to execute release:prepare programmatically", e);
         }
+    }
+
+    private static String getString(LocalDate now, String currentVersion) {
+        String year = String.valueOf(now.getYear()).substring(2); // last 2 digits
+        String month = String.valueOf(now.getMonthValue());       // 1-12
+
+        int buildNumber = 0;
+
+        if (currentVersion != null && !currentVersion.isEmpty()) {
+            String[] parts = currentVersion.replace("-SNAPSHOT", "").split("\\.");
+            if (parts.length == 3) {
+                String currentYear = parts[0];
+                String currentMonth = parts[1];
+                int currentBuild = Integer.parseInt(parts[2]);
+
+                if (currentYear.equals(year) && currentMonth.equals(month)) {
+                    // Same year + month → increment build number
+                    buildNumber = currentBuild + 1;
+                }
+            }
+        }
+
+        return year + "." + month + "." + buildNumber;
     }
 }
