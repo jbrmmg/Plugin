@@ -6,7 +6,7 @@
   <groupId>com.jbr.plugin</groupId>
   <artifactId>auto-version-release</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>1.10-SNAPSHOT</version>
+  <version>1.10</version>
 
   <name>Auto generates version numbers.</name>
 
